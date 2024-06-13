@@ -1,0 +1,63 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary border-bottom border-body">
+	<div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img src="{{ url_for("static", filename="ico.png") }}" alt="Logo" width="40" height="34" class="d-inline-block align-text-top">
+            Cine Sertão
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto"></ul>
+            <form class="d-flex mx-auto" role="search" action="/search">
+            <div class="input-group">
+                <input class="form-control" type="search" name="q" placeholder="Faça uma pesquisa" aria-label="Search">
+                <button class="btn btn-outline-secondary" type="submit">
+                <i class="bi bi-search"></i>
+                </button>
+            </div>
+            </form>
+            <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+                {% if logado %}
+                <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="{{session.session["profile_picture"]}}" class="rounded-circle img-r" alt="Avatar" style="width: 40px; height: 40px;">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                <li>
+                    <a class="dropdown-item" href="/user/{{session.session["uid"]}}">
+                    <div class="d-flex align-items-center">
+                        <img src="{{session.session["profile_picture"]}}" class="rounded-circle" style="width: 40px; height: 40px;" alt="Avatar">
+                        <span class="ms-2">{{session.session["username"]}} {% if session.session["typeUser"] == "adm" %}<i class="bi bi-shield-fill"></i>{% endif %}</span>
+                    </div>
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                {% if session.session["typeUser"] == "read" %}
+                <li><a class="dropdown-item" href="/movies/explorer">Explorar novos generos de filmes</a></li>
+                {% elif session.session["typeUser"] == "adm" %}
+                <li><a class="dropdown-item" href="/management/addMovies">Adicionar filmes</a></li>
+                <li><a class="dropdown-item" href="/management/listTicketsSold">Listar todos os ingressos vendidos</a></li>
+                <li><a class="dropdown-item" href="/management/canteen">Gerenciar cantina</a></li>
+                <li><a class="dropdown-item" href="/newsletter">Enviar emails</a></li>
+                <li><a class="dropdown-item" href="/users/fogotpassword">Recuperar senha de usuario</a></li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li class="dropdown-item">
+                    <a class="btn btn-danger w-100" href="/auth/logout">Sair</a>
+                </li>
+                </ul>
+                {% else %}
+                <a class="nav-link dropdown-toggle" href="#" id="authMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-box-arrow-in-right" style="font-size: 2rem;"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authMenu">
+                <li><a class="dropdown-item" href="/auth/signin">Entrar na conta</a></li>
+                <li><a class="dropdown-item" href="/auth/signup">Criar conta</a></li>
+                </ul>
+            </li>
+            </ul>
+            {% endif %}
+        </div>
+	</div> 
+</nav> 

@@ -1,0 +1,48 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="shadow-lg p-4 mb-5 m-4 bg-body-tertiary rounded">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-center align-items-center">
+            <div class="row w-100">
+                <div class="col-12 col-md-3 text-center mb-3 mb-md-0">
+                    <img src="{{user["profile_picture"]}}" class="rounded-circle img-fluid" alt="Avatar" style="width: 120px; height: 120px; object-fit: cover;">
+                </div>
+                <div class="col-12 col-md-6 text-center text-md-start">
+                    <p class="fw-bold fs-4">{{user["username"]}} {% if user["typeUser"] == "adm" %}<i class="bi bi-shield-fill"></i>{% endif %}</p>
+                    <p>Fale sobre você</p>
+                </div>
+                {% if session and session.session["uid"] == user["uid"] %}
+                <div class="col col-lg-2">
+                    <a href="/user/settings/{{user[0]}}" class="btn btn-primary"><i class="bi bi-gear-fill"></i></a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <hr>
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-center align-items-center mb-3">
+                <p class="fs-4 fw-bold text-center w-100">Meus ingressos comprados</p>
+            </div>
+            <div class="container">
+                <div class="row">
+                    {% if myTickets != {} %}
+                    {% for ingressos in myTickets %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                        <div class="card text-bg-light mb-3 h-100">
+                            <div class="card-header">Ingresso #{{ingressos}}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{myTickets[ingressos].nome_filme}} {% if myTickets[ingressos].em_aberto == "True" %} <span class="badge text-bg-success">Aberto</span> {%else%} <span class="badge text-bg-danger">Fechado</span> {%endif%}</h5>
+                                <p class="card-text">Cadeiras: {{myTickets[ingressos].cadeiras}}<br>Valor: {{myTickets[ingressos].preco_ingresso}}<br>Data da compra: {{myTickets[ingressos].data_compra}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-center">Nenhum ingresso comprado</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}

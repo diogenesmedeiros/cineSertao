@@ -1,0 +1,77 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="p-3"></div>
+<div class="container-fluid z-1">
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
+        <div class="col-md-6">
+            <div class="shadow-lg p-3 mb-5 rounded form-shadow">
+                <p class="text-center fs-2 fw-bold">Atualizar o filme</p>
+                <form class="row g-3" method="post" enctype="multipart/form-data">
+                    {% with message = get_flashed_messages(with_categories=true) %}
+                        {% if message %}
+                            {% for category, message in message %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <p class="fs-5 fw-bold">Sobre o filme</p>
+                    <div class="col-12">
+                        <label for="thumbnail_filme" class="form-label">Escolha a capa do filme</label>
+                        <input type="file" class="form-control" id="thumbnail_filme" name="thumbnail_filme">
+                    </div>
+                    <div class="col-12">
+                        <label for="titulo" class="form-label">Digite um titulo</label>
+                        <input type="text" class="form-control" id="titulo" value="{{filme.titulo}}" name="titulo">
+                    </div>
+                    <div class="col-12">
+                        <label for="link_trailer" class="form-label">Digite o link do trailer</label>
+                        <input type="text" class="form-control" id="link_trailer" value="{{filme.trailer}}" name="link_trailer">
+                    </div>
+                    <div class="col-12">
+                        <label for="descricao" class="form-label">Digite uma descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao">{{filme.descricao}}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="genero" class="form-label">Digite os generos do filme (separados por -)</label>
+                        <input type="text" class="form-control" id="genero" value="{{filme.genero}}" name="genero">
+                    </div>
+                    <div class="col-12">
+                        <label for="data_lancamento" class="form-label">Digite a data de lançamento</label>
+                        <input type="date" class="form-control" id="data_lancamento" value="{{filme.data_lancamento}}" name="data_lancamento">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="diretor" class="form-label">Digite quem dirigiu o filme</label>
+                        <input type="text" class="form-control" id="diretor" value="{{filme.diretor}}" name="diretor">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="nota_imdb" class="form-label">Digite a nota do imdb desse filme</label>
+                        <input type="number" class="form-control" id="nota_imdb" value="{{filme.nota_imdb}}" name="nota_imdb">
+                    </div>
+                    <div class="col-12">
+                        <label for="elenco" class="form-label">Digite o elenco do filme</label>
+                        <input type="text" class="form-control" id="elenco" value="{{filme.elenco}}" name="elenco">
+                    </div>
+                    <p class="fs-5 fw-bold">Informações da sessão</p>
+                    <div class="col-md-6">
+                        <label for="capacidade_sessao" class="form-label">Digite a capacidade da sessão</label>
+                        <input type="number" class="form-control" id="capacidade_sessao" value="{{filme.capacidade_sessao}}" name="capacidade_sessao">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="preco_ingresso" class="form-label">Digite o preço do ingresso</label>
+                        <input type="text" class="form-control" id="preco_ingresso" value="{{filme.preco_ingresso}}" name="preco_ingresso">
+                    </div>
+                    <div class="col-12">
+                        <label for="data_disponivel" class="form-label">Digite as data que o filme ficara disponivel</label>
+                        <input type="date" class="form-control" id="data_disponivel" name="data_disponivel">
+                    </div>
+                    <div class="col-12">
+                        <label for="horario_disponivel" class="form-label">Digite os horarios que o filme ficara disponivel</label>
+                        <input type="time" class="form-control" id="horario_disponivel" value="{{filme.horario_disponivel}}" name="horario_disponivel">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}

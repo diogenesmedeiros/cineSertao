@@ -1,0 +1,53 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="shadow-lg p-4 mb-5 m-4 bg-body-tertiary rounded">
+    <div class="container">
+        <div class="p-3">
+            <form class="d-flex mx-auto" role="search" method="post"  action="/management/listTicketsSold">
+                <div class="input-group">
+                    <input class="form-control" type="search" name="q" placeholder="Pesquise o filme que você queira ver os ingressos" aria-label="Search">
+                    <button class="btn btn-outline-secondary" type="submit">
+                    <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="container">
+            <div class="row">
+                {% if resultSearch != {} %}
+                <div class="d-grid gap-2 p-3">
+                    <button class="btn btn-primary"><i class="bi bi-file-earmark-text-fill"></i> Gerar relatorio de ingressos</button>
+                </div>
+                {% for ingressos in resultSearch %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="card text-bg-light mb-3 h-100">
+                        <div class="card-header">Ingresso</div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{resultSearch[ingressos].nome_filme}}</h5>
+                            <p class="card-text">Cadeiras: {{resultSearch[ingressos].cadeiras}}<br>Valor: {{resultSearch[ingressos].preco_ingresso}}<br>Data da compra: {{resultSearch[ingressos].data_compra}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                {% if ticketsSold != {} %}
+                {% for ingressos in ticketsSold %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="card text-bg-light mb-3 h-100">
+                        <div class="card-header">Ingresso</div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ticketsSold[ingressos].nome_filme}}</h5>
+                            <p class="card-text">Cadeiras: {{ticketsSold[ingressos].cadeiras}}<br>Valor: {{ticketsSold[ingressos].preco_ingresso}}<br>Data da compra: {{ticketsSold[ingressos].data_compra}}<br>UID do comprador: {{ticketsSold[ingressos].uid}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-center">Nenhum ingresso comprado</p>
+                {% endif %}
+                {%endif%}
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}

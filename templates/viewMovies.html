@@ -1,0 +1,79 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<style>
+    .poster {
+        width: 420px;
+        max-width: 100%;
+        display: block;
+    }
+    .star-rating {
+        color: gold;
+    }
+    .rating {
+        display: flex;
+        align-items: center;
+    }
+    .rating .star {
+        margin-right: 5px;
+    }
+</style>
+<div class="modal fade" id="CompartilhaFilme" tabindex="-1" aria-labelledby="CompartilhaFilmeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="CompartilhaFilmeLabel">Compartilha filme</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <a href="https://api.whatsapp.com/send?text=http://127.0.0.1:5000/movies/{{filme.filme_id}}" target="_blank"><i class="bi bi-whatsapp"></i></a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:5000/movies/{{filme.filme_id}}" target="_blank"><i class="bi bi-facebook"></i></a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{{ url_for("static", filename=filme.capa) }}" alt="Poster" class="poster img-fluid">
+            <div class="d-grid gap-2">
+                <a class="btn btn-danger btn-block mt-3" href="https://{{ filme.trailer }}" target="_blank">Trailer</a>
+            </div>
+            <div class="p-1"></div>
+        </div>
+        <div class="col-md-8">
+            <h1>{{filme.titulo}} <small>({{filme.data_lancamento.split("/")[2]}})</small></h1>
+            <div class="rating">
+                <div class="star-rating">
+                    {% for i in range(1, 11) %}
+                        <span class="star">{% if i <= filme.nota_imdb %}&#9733;{% else %}&#9734;{% endif %}</span>
+                    {% endfor %}
+                </div>
+                <span class="ml-2">{{filme.nota_imdb}}/10 (IMDb)</span>
+            </div>
+            <p>{{filme.descricao}}</p>
+            <p><strong>Direção:</strong> {{filme.diretor}}</p>
+            <p><strong>Elenco:</strong> {{filme.elenco}}</p>
+            <p><strong>Gênero:</strong> {{filme.genero}}</p>
+            {% if logado %}
+            {% if session.session["typeUser"] == "adm" %}
+            <h4 class="text-center">Ações no filme</h4>
+            <hr>
+            <div class="d-grid gap-2">
+                <a class="btn btn-warning btn-block mt-1" href="/movies/update/{{filme.filme_id}}">Atualizar filme</a>
+                <a class="btn btn-danger btn-block mt-1" href="/movies/remove/{{filme.filme_id}}">Remover filme</a>
+            </div>
+            {% else %}
+            <h4 class="text-center">Ações no filme</h4>
+            <hr>
+            <div class="d-grid gap-2">
+                <a class="btn btn-warning btn-block mt-1" href="/reserve/{{filme.filme_id}}">Comprar ingressos</a>
+                <button class="btn btn-warning btn-block mt-1" data-bs-toggle="modal" data-bs-target="#CompartilhaFilme">Compartilha</a>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>

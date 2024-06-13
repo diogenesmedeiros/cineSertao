@@ -1,0 +1,23 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="container-fluid z-1">
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
+        <div class="col-md-6">
+            <div class="shadow-lg p-4 mb-5 m-4 bg-body-tertiary rounded">
+                <p class="text-center fs-2 fw-bold">Enviar email para todos os usuarios</p>
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Digite o titulo</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Digite sua message</label>
+                        <textarea type="text" class="form-control" id="message" name="message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}

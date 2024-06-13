@@ -1,0 +1,38 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="container-fluid z-1">
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
+        <div class="col-md-6">
+            <div class="shadow-lg p-3 mb-5 rounded form-shadow">
+                <p class="text-center fs-2 fw-bold">Fazer cadastro</p>
+                <form method="post" id="cad">
+                    {% with message = get_flashed_messages(with_categories=true) %}
+                        {% if message %}
+                            {% for category, message in message %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Digite um nome</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Digite um email</label>
+                        <input type="email" class="form-control" id="email" name="email" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Digite uma senha</label>
+                        <input type="password" class="form-control" id="password" name="senha" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="checkbox" class="form-check-input" id="isAdm" name="isAdm">
+                        <label for="isAdm" class="form-label">Deseja ser adm (Marque a caixinha para sim)</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}

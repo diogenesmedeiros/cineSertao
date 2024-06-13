@@ -1,0 +1,39 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                <div class="container">
+                    <div class="row">
+                        {% for index_filme in foods %}
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                            <a href="/management/canteen/{{index_filme}}">
+                                <div class="card h-100">
+                                    <img src="{{ url_for('static', filename=foods[index_filme].capa) }}" class="card-img-top" alt="{{foods[index_filme].nome}}">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">{{foods[index_filme].nome}}
+                                            {% if foods[index_filme].disponivel == "True" %}
+                                                <span class="badge text-bg-success">Disponível</span>
+                                            {% else %}
+                                                <span class="badge text-bg-danger">Não disponível</span>
+                                            {% endif %}
+                                        </h5>
+                                        <p class="card-text mt-auto">R$ {{foods[index_filme].preco}}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}

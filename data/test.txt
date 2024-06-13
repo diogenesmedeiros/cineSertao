@@ -1,0 +1,4 @@
+;[pk]={colum:valor,colum:valor,colum:valor,colum:valor,colum:valor,colum:valor}
+;[123]={col1:valor1,col2:valor2,col3:valor3}
+;[123s]={col1:valor1,col2:valor2,col3:valor3}
+;[1234]={col1:valor1234,col2:valor22,filme:'nome'# 'a'#}

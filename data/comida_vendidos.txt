@@ -1,0 +1,1 @@
+;[837473]={nome_Agua:Agua,preco_Agua:2.0,qtde_Agua:2,nome_Refrigerantes:Refrigerantes,preco_Refrigerantes:2.0,qtde_Refrigerantes:2,id_ingresso:348314}

@@ -1,0 +1,104 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="container-fluid z-1">
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
+        <div class="col-md-6">
+            <div class="shadow-lg p-3 mb-5 rounded form-shadow">
+                <p class="text-center fs-2 fw-bold">Adicionar filme</p>
+                <form class="row g-3" method="post" id="frmFilm" enctype="multipart/form-data" onsubmit="removeProtocol()">
+                    {% with message = get_flashed_messages(with_categories=true) %}
+                        {% if message %}
+                            {% for category, message in message %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <p class="fs-5 fw-bold">Sobre o filme</p>
+                    <div class="col-12">
+                        <label for="thumbnail_filme" class="form-label">Escolha a capa do filme</label>
+                        <input type="file" class="form-control" id="thumbnail_filme" name="thumbnail_filme" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="titulo" class="form-label">Digite um titulo</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="link_trailer" class="form-label">Digite o link do trailer</label>
+                        <input type="text" class="form-control" id="link_trailer" name="link_trailer" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="descricao" class="form-label">Digite uma descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" required></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="genero" class="form-label">Digite os generos do filme (separados por -)</label>
+                        <input type="text" class="form-control" id="genero" name="genero" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="data_lancamento" class="form-label">Digite a data de lançamento</label>
+                        <input type="date" class="form-control" id="data_lancamento" name="data_lancamento" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="diretor" class="form-label">Digite quem dirigiu o filme</label>
+                        <input type="text" class="form-control" id="diretor" name="diretor" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="nota_imdb" class="form-label">Digite a nota do imdb desse filme</label>
+                        <input type="number" class="form-control" id="nota_imdb" min="0" max="10" step="0" name="nota_imdb" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="elenco" class="form-label">Digite o elenco do filme (separados por -)</label>
+                        <textarea class="form-control" id="elenco" name="elenco" required></textarea>
+                    </div>
+                    <p class="fs-5 fw-bold">Informações da sessão</p>
+                    <div class="col-md-6">
+                        <label for="capacidade_sessao" class="form-label">Digite a capacidade da sessão</label>
+                        <input type="number" class="form-control" id="capacidade_sessao" min="1" max="7" step="1" name="capacidade_sessao" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="preco_ingresso" class="form-label">Digite o preço do ingresso</label>
+                        <input type="text" class="form-control" id="preco_ingresso" name="preco_ingresso" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="data_disponivel" class="form-label">Digite as data que o filme ficara disponivel</label>
+                        <input type="date" class="form-control" id="data_disponivel" name="data_disponivel" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Criar filme</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('#frmFilm').on("submit", function (e) {
+        if(!$(this).valid()) {
+            e.preventDefault();
+            return false;
+        }
+
+        $(this).submit();
+    });
+
+    $('input[type="text"]').on('focus blur', function() {
+        var currentValue = $(this).val();
+        $(this).val(currentValue.replace(/,/g, ''));
+    });
+    $('textarea').on('focus blur', function() {
+        var currentValue = $(this).val();
+        $(this).val(currentValue.replace(/,/g, ''));
+    });
+
+    function removeProtocol() {
+        const urlInput = $("#link_trailer");
+        const urlValue = urlInput.val();
+            urlInput.val(urlValue.replace(/(^\w+:|^)\/\//, ''));
+    }
+
+    $("#link_trailer").on('focus blur', function() {
+        removeProtocol();
+    });
+});
+</script>
+{% include "footer.html" %}

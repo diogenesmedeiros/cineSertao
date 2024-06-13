@@ -1,0 +1,18 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                {% with message = get_flashed_messages(with_categories=true) %}
+                    {% if message %}
+                        {% for category, message in message %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}

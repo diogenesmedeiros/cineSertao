@@ -1,0 +1,4 @@
+;[01]={capa:uploads/cardapio/agua.png,nome:Agua,preco:2.0,disponivel:True}
+;[02]={capa:uploads/cardapio/hamburguer.jpeg,nome:Hamburguer,preco:18.0,disponivel:True}
+;[03]={capa:uploads/cardapio/refrigerentes.jpg,nome:Refrigerantes,preco:3.55,disponivel:True}
+;[04]={capa:uploads/cardapio/pipoca.png,nome:Pipoca,preco:6.22,disponivel:True}

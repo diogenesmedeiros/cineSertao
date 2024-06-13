@@ -1,0 +1,3 @@
+;[154354]={username:diogenes,email:softknightbr@gmail.com,password:12345,type:adm,profile_picture:/static/profile_picture.png}
+;[154355]={username:Diogenes Junior,email:juniormedeiros20119@gmail.com,password:12345,type:read,profile_picture:/static/profile_picture.png}
+;[154354]={username:diogenes_,email:juniormedeiros2011@outlook.com,password:12345,type:adm,profile_picture:/static/profile_picture.png}

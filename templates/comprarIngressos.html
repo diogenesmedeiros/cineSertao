@@ -1,0 +1,285 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+<style>
+    .seats {
+        max-height: 300px;
+        overflow: auto;
+        padding: 10px;
+    }
+
+    .seat {
+        width: 40px;
+        height: 40px;
+        margin: 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+    .seat.selected {
+        background-color: green;
+        color: white;
+    }
+    .seat.occupied {
+        background-color: red;
+        pointer-events: none;
+    }
+    .seat.bg-warning p {
+        margin: 0;
+    }
+    .bg-body-tertiary {
+            background-color: #f8f9fa;
+    }
+    .poster {
+            max-width: 100%;
+            height: auto;
+        }
+</style>
+<div class="modal fade" id="relatorioCompra" tabindex="-1" aria-labelledby="accordion" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="accordion">Relatorio de compra</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <p class="fs-5 fw-bold">Cadeiras selecionados</p>
+                    <div id="relatorio_compra_cadeiras"></div>
+                    <hr>
+                    <p class="fs-5 fw-bold">Lanches selecionados</p>
+                    <div id="relatorio_compra_lanches"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="liveAlertPlaceholder" class="position-fixed top-0 end-0 p-3 m-4" style="z-index: 9999"></div>
+<div class="container mt-5 z-1">
+    <div class="row">
+        <div class="col-md-4 col-sm-12 text-center">
+            <img src="{{ url_for('static', filename=filme.capa) }}" alt="Poster" class="poster img-fluid">
+            <div class="p-1"></div>
+            <form action="/checkout" method="post">
+                <input type="text" name="chair" style="display: none;" id="chair">
+                <input type="text" name="name_film" style="display: none;" id="name_film" value="{{filme.titulo}}">
+                <input type="text" name="preco_ingresso" style="display: none;" id="preco_ingresso" value="{{filme.preco_ingresso}}">
+                <input type="text" name="menu" style="display: none;" id="menu">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success" id="finalizar_compra">Finalizar compra</button>
+                </div>
+            </form>
+            <div class="p-1"></div>
+            <div class="d-grid gap-2">
+                <button class="btn btn-warning" id="remove_assento" data-bs-toggle="modal" data-bs-target="#relatorioCompra">Ver relatorio de compra</button>
+            </div>
+            <div class="p-1"></div>
+        </div>
+        <div class="col-md-8 col-sm-12">
+            <h1>{{filme.titulo}} <small>({{filme.data_lancamento.split('/')[2]}})</small></h1>
+            <div class="rating">
+                <div class="star-rating">
+                    {% for i in range(1, 11) %}
+                        <span class="star">{% if i <= filme.nota_imdb %}&#9733;{% else %}&#9734;{% endif %}</span>
+                    {% endfor %}
+                </div>
+                <span class="ml-2">{{filme.nota_imdb}}/10 (IMDb)</span>
+            </div>
+            <p>{{filme.descricao}}</p>
+            <p><strong>Direção:</strong> {{filme.diretor}}</p>
+            <p><strong>Elenco:</strong> {{filme.elenco}}</p>
+            <p><strong>Gênero:</strong> {{filme.generos}}</p>
+            <h4 class="text-center">Compra de ingresso</h4>
+            <hr>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            Escolher cadeiras (Valor do ingresso: {{filme.preco_ingresso}})
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <div class="seats d-flex flex-wrap justify-content-center overflow-visible">
+                                {% for i in range(1, 8) %}
+                                <div class="d-flex justify-content-center">
+                                    {% set alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+                                    {% if i <= filme.capacidade_sessao %}
+                                    {% for j in range(1, 11) %}
+                                    <div class="seat bg-primary m-1" data-seat="{{alphabet[i-1]}}{{j}}"></div>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for j in range(1, 11) %}
+                                    <div class="seat bg-secondary m-1"></div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button class="btn btn-danger" id="confirm_remove_assento"><i class="bi bi-trash3-fill"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                            Cardápio
+                        </button>
+                    </h2>
+                    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <p>OBS: A quantidade que você ira pegar acerta na recepção</p>
+                            <div class="row">
+                                {% for cardapio_ in cardapio %}
+                                {% if cardapio[cardapio_].disponivel == "True" %}
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card m-2" style="height: 40vh;">
+                                        <div class="text-center">
+                                            <img src="{{ url_for('static', filename=cardapio[cardapio_].capa) }}" class="card-img-top img-fluid" style="width: 35%;" alt="{{cardapio.nome}}">
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title text-center">{{cardapio[cardapio_].nome}}</h5>
+                                            <p class="text-center">R$ {{cardapio[cardapio_].preco}}</p>
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <button type="button" class="btn btn-danger btn-sm removeMenu" data-seat="{{cardapio[cardapio_].nome}}"><i class="bi bi-dash-circle"></i></button>
+                                                    </div>
+                                                    <div class="col">
+                                                        <p id='qtde-{{cardapio[cardapio_].nome}}'>0</p>
+                                                        <div class="preco" data-seat='{{cardapio[cardapio_].preco}}'></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <button type="button" class="btn btn-primary btn-sm addMenu" data-seat="{{cardapio[cardapio_].nome}}"><i class="bi bi-plus-circle"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {%endif%}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var selectedMenu = []
+        var selectedChair = []
+
+        $('.seat.bg-primary').click(function() {
+            if (selectedChair.length < 4 && !$(this).hasClass('selected')) {
+                $(this).addClass('selected bg-warning').removeClass('bg-primary');
+                selectedChair.push($(this).data('seat'));
+                $(this).html(`<p>${$(this).data('seat')}</p>`);
+            }
+
+            let menuHtml = selectedChair.map(menu => `Cadeiras: ${menu}`).join('<br>');
+            $("#relatorio_compra_cadeiras").html(menuHtml)
+        });
+
+        $('#confirm_remove_assento').click(function() {
+            selectedChair.forEach(function(seat) {
+                $(`.seat[data-seat="${seat}"]`).removeClass('selected bg-warning').addClass('bg-primary').html('');
+            });
+            selectedChair = [];
+            $("#relatorio_compra_cadeiras").html("")
+        });
+
+        $('.addMenu').click(function() {
+            let seat = $(this).data('seat');
+            let menuUpdated = false;
+            let count = 1
+
+            for(let menu of selectedMenu) {
+                if(menu.nome == seat) {
+                    if(menu.qtde <= 9) {
+                        menu.qtde += 1;
+                        count = menu.qtde
+
+                        menuUpdated = true;
+
+                        break;
+                    }else{
+                        count = menu.qtde
+                        break
+                    }
+                }
+            }
+
+            $(`#qtde-${seat}`).html(count)
+
+            if (!menuUpdated) {
+                selectedMenu.push({"nome": seat, "qtde": 1, "preco": $(".preco").data('seat')});
+            }
+            
+            let menuHtml = selectedMenu.map(menu => `${menu.nome}: ${menu.qtde} unidades`).join('<br>');
+            $("#relatorio_compra_lanches").html(menuHtml);
+        });
+
+        $('.removeMenu').click(function() {
+            let seat = $(this).data('seat');
+            let menuUpdated = false;
+            let count = 0;
+
+            for (let i = 0; i < selectedMenu.length; i++) {
+                let menu = selectedMenu[i];
+                if (menu.nome == seat) {
+                    if (menu.qtde == 1) {
+                        selectedMenu.splice(i, 1);
+                    } else {
+                        menu.qtde -= 1;
+                        count = menu.qtde;
+                    }
+                    menuUpdated = true;
+                    break;
+                }
+            }
+
+            $(`#qtde-${seat}`).html(count);
+
+            let menuHtml = selectedMenu.map(menu => `${menu.nome}: ${menu.qtde} unidades`).join('<br>');
+            $("#relatorio_compra").html(menuHtml);
+        });
+
+        $('#finalizar_compra').click(function (e) {
+            const menu_ = document.getElementById("menu")
+            const chair_ = document.getElementById("chair")
+
+            if(selectedChair == "") {
+                e.preventDefault()
+                alerts("Precisa seleciona a cadeira", "danger")
+            }else{
+                menu_.value = selectedMenu.map(menu => `${menu.nome}:${menu.preco}:${menu.qtde}`)
+                chair_.value = selectedChair
+            }
+        })
+    });
+
+    function alerts(message, type) {
+		const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+		const wrapper = document.createElement('div');
+
+		alertPlaceholder.innerHTML = ''
+
+		wrapper.innerHTML = `
+		<div class="alert alert-${type} float-end m-4 z-3 alert-dismissible" role="alert">
+			<div>${message}</div>
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		`;
+
+		alertPlaceholder.append(wrapper);
+	}
+</script>
+{% include "footer.html" %}
